@@ -276,11 +276,20 @@ function copy (src) {
     else return src;
 }
 
-var objectKeys = Object.keys || function keys (obj) {
-    var res = [];
-    for (var key in obj) res.push(key)
-    return res;
-};
+const objectKeys = function ( obj ) {
+  if ( Buffer.isBuffer( obj ) ) {
+    return function ( ) { // avoid params
+      return [] // always returning an empty array (no keys)
+    };
+  }
+  else {
+    return Object.keys || function keys (obj) {
+      var res = [];
+      for (var key in obj) res.push(key)
+      return res;
+    };
+  }
+}
 
 function toS (obj) { return Object.prototype.toString.call(obj) }
 function isDate (obj) { return toS(obj) === '[object Date]' }
